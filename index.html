@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <title>Dictionary</title>
+</head>
+<style>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        background-color: #F7CAC9;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Lato', sans-seri;
+    }
+    #input_word{
+        margin-top: 40px;
+    }
+    #btn{
+        cursor: pointer;
+        background-color: #349edb;
+        border: 2px solid #3498db;
+        border-radius: 4px;
+        color: #fff;
+        display: block;
+        font-size: 16px;
+        padding: 10px;
+        margin-top: 20px;
+        width: 100%;
+    }
+    
+</style>
+<body>
+    <div class="container">
+       
+            <input id="input_word" placeholder="Search">
+            <button id="btn" type="submit">Search</button>
+        </div>  
+         
+        <div class="meaning">
+           
+        </div>
+    </div>
+    
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    function callAjax(keyword){ 
+        axios.get(`https://owlbot.info/api/v4/dictionary/${keyword}`,{
+            headers:{
+                'Authorization': `Token de40a2b9fa0ee1a76084876249671de786a04e20`
+            }
+        })
+        .then((res)=>{
+            $(`.meaning`).append(`
+            <h1>${res.data.word}</h1>
+            <h2>Pronunciation:</h2><span id="pronunciation">${res.data.pronunciation}</span>
+            <h2>Type:</h2><span id="type">${res.data.definitions[0].type}</span>
+            <h2>Definition:</h2><span id="definition">${res.data.definitions[0].definition}</span>
+            <h2>Example:</h2><span id="example">${res.data.definitions[0].example}</span>
+            `)
+        })
+        .catch((error)=>{
+            console.error(error);
+        })
+    }
+    $(`#btn`).on('click',function(){
+        $(`.meaning`).empty()
+        var searchWord = $(`#input_word`).val();
+        callAjax(searchWord)
+    })
+
+    $(`#input_word`).on('keydown',function(e){
+        $(`.meaning`).empty()
+        if(e.keyCode === 13){
+            var searchWord = $(`#input_word`).val();
+            callAjax(searchWord)
+        }
+    })
+</script>
+</html>

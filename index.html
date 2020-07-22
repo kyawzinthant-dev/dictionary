@@ -22,7 +22,7 @@
     
         .container2{
             /* set parent's width */
-            width: 90%; 
+            width: 95%; 
             min-height: 100vh;
             font-family: 'Varta', sans-serif;
            
@@ -186,6 +186,9 @@
 <script>
 
     function callAjax(keyword){ 
+        if(keyword ===""){
+            return false;
+        }
         axios.get(`https://owlbot.info/api/v4/dictionary/${keyword}`,{
             headers:{
                 'Authorization': `Token de40a2b9fa0ee1a76084876249671de786a04e20`
@@ -206,7 +209,7 @@
 
             $(`.meaning`).append(`
             <h1>${res.data.word}</h1>
-            <h3>Pronunciation:</h3><span id="pronunciation">${res.data.pronunciation}</span><hr>
+            <h3>Pronunciation:</h3><span id="pronunciation">${res.data.pronunciation ? res.data.pronunciation :"Not available"}</span><hr>
             <h3>Type:</h3><span id="type">${res.data.definitions[0].type}</span><hr>
             <h3>Definition:</h3>
             ${defs[0]} 
